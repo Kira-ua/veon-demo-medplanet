@@ -1,0 +1,110 @@
+---
+import FutureLink from "./FutureLink.astro";
+import Icon from "./Icon.astro";
+import logo from "../assets/medplanet-logo.svg";
+import { contact, FUTURE } from "../data/site";
+
+const nav = [
+  { href: "#directions", label: "Каталог" },
+  { href: "#b2b", label: "Для організацій" },
+  { href: "#delivery", label: "Доставка і оплата" },
+  { href: "#contacts", label: "Контакти" },
+];
+---
+<header class="hdr" data-rec="R-001,G-R001,S-R007">
+  <div class="container hdr__in">
+    <a class="hdr__logo" href="#top">
+      <img src={logo.src} width="188" height="74" alt="Medplanet" />
+    </a>
+
+    <nav class="hdr__nav" aria-label="Головне меню">
+      <ul>
+        {nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <div class="hdr__aux">
+      <FutureLink note={FUTURE}>Пошук</FutureLink>
+      <FutureLink note={FUTURE} class="future-link--end"><span lang="ru">рус</span></FutureLink>
+    </div>
+
+    <div class="hdr__contact">
+      <a class="hdr__tel tel-link num" href={contact.tel}>{contact.phoneDisplay}</a>
+      <a class="btn btn--ghost btn--sm hdr__viber" href={contact.viber}><Icon name="viber" />Viber</a>
+    </div>
+
+    <div class="hdr__mob">
+      <a class="hdr__icon" href={contact.tel} aria-label={`Подзвонити ${contact.phoneDisplay}`}><Icon name="phone" /></a>
+      <a class="hdr__icon" href={contact.viber} aria-label="Написати у Viber"><Icon name="viber" /></a>
+      <details class="menu">
+        <summary class="hdr__icon menu__btn">
+          <Icon name="menu" class="menu__open" /><Icon name="close" class="menu__close" />
+          <span class="visually-hidden">Меню</span>
+        </summary>
+        <div class="menu__panel">
+          <nav aria-label="Меню">
+            <ul class="menu__list">
+              {nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+            </ul>
+          </nav>
+          <div class="menu__aux">
+            <FutureLink note={FUTURE}>Пошук</FutureLink>
+            <FutureLink note={FUTURE}><span lang="ru">Рус</span></FutureLink>
+          </div>
+          <div class="menu__contact">
+            <a class="menu__tel tel-link num" href={contact.tel}>{contact.phoneFull}</a>
+            <ul class="menu__hours">{contact.hours.map((h) => <li>{h}</li>)}</ul>
+          </div>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>
+
+<style>
+  .hdr { position: sticky; top: 0; z-index: 50; background: var(--color-bg); border-bottom: 1px solid var(--color-rule); }
+  .hdr__in { display: flex; align-items: center; gap: var(--s-3); height: var(--header-h); }
+  .hdr__logo { display: inline-flex; flex: none; margin-right: auto; min-height: var(--btn-h-sm); align-items: center; }
+  .hdr__logo img { height: 34px; width: auto; }
+  .hdr__nav, .hdr__aux, .hdr__contact { display: none; }
+
+  .hdr__mob { display: flex; align-items: center; gap: var(--s-1); }
+  .hdr__icon { display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: var(--radius); color: var(--color-primary); cursor: pointer; transition: background-color var(--dur-micro) var(--ease-out); }
+  .hdr__icon:hover { background: var(--color-bg-2); }
+  .hdr__icon :global(.icon) { width: 1.5rem; height: 1.5rem; }
+
+  .menu summary { list-style: none; }
+  .menu summary::-webkit-details-marker { display: none; }
+  .menu :global(.menu__close) { display: none; }
+  .menu[open] :global(.menu__close) { display: block; }
+  .menu[open] :global(.menu__open) { display: none; }
+  .menu:not([open]) .menu__panel { display: none; }
+  .menu__panel {
+    position: fixed; left: 0; right: 0; top: var(--header-h); bottom: 0; overflow-y: auto;
+    background: var(--color-bg); border-top: 1px solid var(--color-rule);
+    padding: var(--s-3) var(--gutter) var(--s-5); display: grid; align-content: start; gap: var(--s-4);
+  }
+  .menu__list { list-style: none; display: grid; }
+  .menu__list a { display: flex; align-items: center; min-height: 56px; border-bottom: 1px solid var(--color-rule); font-family: var(--font-display); font-weight: 700; font-size: var(--fs-h3); text-decoration: none; color: var(--color-text); }
+  .menu__aux { display: flex; gap: var(--s-3); }
+  .menu__contact { display: grid; gap: var(--s-1); }
+  .menu__tel { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-price); color: var(--color-primary); min-height: var(--btn-h-sm); display: inline-flex; align-items: center; }
+  .menu__hours { list-style: none; color: var(--color-muted); font-size: var(--fs-meta); }
+
+  @media (min-width: 1024px) {
+    .hdr__mob { display: none; }
+    .hdr__logo { margin-right: 0; }
+    .hdr__logo img { height: 40px; }
+    .hdr__nav { display: block; margin-right: auto; }
+    .hdr__nav ul { list-style: none; display: flex; gap: var(--s-3); }
+    .hdr__nav a { display: inline-flex; align-items: center; min-height: var(--btn-h-sm); text-decoration: none; font-size: var(--fs-meta); font-weight: 700; color: var(--color-text); position: relative; transition: color var(--dur-micro) var(--ease-out); }
+    .hdr__nav a::after { content: ""; position: absolute; left: 0; right: 0; bottom: 8px; height: 2px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform var(--dur-ui) var(--ease-out); }
+    .hdr__nav a:hover { color: var(--color-primary); }
+    .hdr__nav a:hover::after { transform: scaleX(1); }
+    .hdr__contact { display: flex; align-items: center; gap: var(--s-2); }
+    .hdr__tel { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-h3); color: var(--color-primary); white-space: nowrap; min-height: var(--btn-h-sm); display: inline-flex; align-items: center; }
+  }
+  @media (min-width: 1280px) {
+    .hdr__aux { display: flex; gap: var(--s-3); font-size: var(--fs-meta); }
+  }
+</style>

@@ -1,0 +1,53 @@
+---
+import FutureLink from "./FutureLink.astro";
+import logo from "../assets/medplanet-logo.svg";
+import { contact, FUTURE } from "../data/site";
+
+const pages = ["Каталог", "Для організацій", "Оплата і доставка", "Про компанію", "Умови повернення", "Договір публічної оферти", "Політика конфіденційності"];
+---
+<footer class="ftr">
+  <div class="container ftr__in">
+    <div class="ftr__brand">
+      <a class="ftr__logo" href="#top"><img src={logo.src} width="188" height="74" alt="Medplanet, на початок сторінки" /></a>
+      <p class="ftr__legal">{contact.legal}<br />ЄДРПОУ <span class="num">{contact.edrpou}</span></p>
+    </div>
+    <div class="ftr__col">
+      <p class="ftr__label">Зв'язок</p>
+      <ul>
+        <li><a class="tel-link num" href={contact.tel}>{contact.phoneFull}</a></li>
+        <li><a href={contact.viber}>Viber</a></li>
+        <li><a href={contact.telegram}>Telegram</a></li>
+        <li><a href={`mailto:${contact.email}`}>{contact.email}</a></li>
+      </ul>
+    </div>
+    <nav class="ftr__col" aria-label="Розділи сайту">
+      <p class="ftr__label">Розділи</p>
+      <ul>
+        {pages.map((p) => <li><FutureLink note={FUTURE}>{p}</FutureLink></li>)}
+      </ul>
+    </nav>
+  </div>
+  <div class="container ftr__base">
+    <p>© 2026 Medplanet</p>
+  </div>
+</footer>
+
+<style>
+  .ftr { background: var(--color-bg-2); color: var(--color-text); padding-top: var(--s-5); font-size: var(--fs-meta); }
+  .ftr__in { display: grid; gap: var(--s-4); }
+  .ftr__logo { display: inline-flex; }
+  .ftr__logo img { height: 40px; width: auto; }
+  .ftr__brand { display: grid; gap: var(--s-2); align-content: start; }
+  .ftr__legal { color: var(--color-muted); }
+  .ftr__label { color: var(--color-muted); margin-bottom: var(--s-1); }
+  .ftr ul { list-style: none; display: grid; }
+  .ftr li { display: flex; }
+  .ftr a:not(.ftr__logo) { display: inline-flex; align-items: center; min-height: var(--btn-h-sm); text-decoration: none; font-weight: 700; color: var(--color-primary); }
+  .ftr a:not(.ftr__logo):hover { text-decoration: underline; text-underline-offset: 0.2em; }
+  .ftr__base { margin-top: var(--s-4); padding-block: var(--s-3); border-top: 1px solid var(--color-rule); color: var(--color-muted); }
+  @media (min-width: 768px) {
+    .ftr__in { grid-template-columns: minmax(0, 5fr) minmax(0, 3fr) minmax(0, 4fr); gap: var(--s-3); }
+  }
+  /* room for the phone dock */
+  @media (max-width: 767px) { .ftr__base { padding-bottom: calc(var(--s-3) + 72px); } }
+</style>

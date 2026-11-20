@@ -1,0 +1,157 @@
+---
+import { Picture } from "astro:assets";
+import FutureLink from "./FutureLink.astro";
+import Icon from "./Icon.astro";
+import { contact, directions, panelPhotos, FUTURE } from "../data/site";
+
+const lead = directions.slice(0, 2);
+const compact = directions.slice(2);
+---
+<section id="directions" class="dirs section" data-rec="R-004">
+  <div class="container">
+    <div class="section__head">
+      <h2>Шість напрямів каталогу</h2>
+      <p class="section__lead">Номери ті самі, що в укладці вгорі: від тактичної аптечки до медичних меблів.</p>
+    </div>
+
+    <div class="dirs__lead">
+      {lead.map((d, i) => {
+        const p = panelPhotos[d.id] ?? { photo: d.photo, alt: d.alt, fill: d.fill };
+        return (
+          <article id={d.id} class:list={["dir", "dir--panel", i === 0 ? "dir--wide" : "dir--narrow"]}>
+            <div class:list={["dir__photo", p.fill && "dir__photo--fill"]}>
+              <Picture fallbackFormat="jpg" quality={80} src={p.photo} formats={["avif", "webp"]} widths={[320, 480, 720, 960]} sizes="(min-width: 1024px) 40vw, 100vw" alt={p.alt} loading="lazy" decoding="async" />
+            </div>
+            <div class="dir__body">
+              <div class="dir__head"><span class="dir__num num" aria-hidden="true">{d.num}</span><h3 class="dir__title">{d.title}</h3></div>
+              <p class="dir__lead">{d.lead}</p>
+              <ul class="dir__subs">
+                {d.subs.map((s) => <li><FutureLink note={FUTURE}>{s}</FutureLink></li>)}
+              </ul>
+              <a class="dir__cta" href="#b2b" data-rec="R-005">Замовлення для організації</a>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+
+    <div class="dirs__compact">
+      {compact.map((d) => (
+        <article id={d.id} class="dir dir--compact">
+          <div class:list={["dir__thumb", d.fill && "dir__thumb--fill"]} aria-hidden="true">
+            <span class="dir__chip num">{d.num}</span>
+            <Picture fallbackFormat="jpg" quality={80} src={d.photo} formats={["avif", "webp"]} widths={[240, 360, 480]} sizes="(min-width: 1024px) 300px, 45vw" alt="" loading="lazy" decoding="async" />
+          </div>
+          <div class="dir__row">
+            <div class="dir__head"><span class="dir__num num" aria-hidden="true">{d.num}</span><h3 class="dir__title">{d.title}</h3></div>
+            <button type="button" class="dir__toggle" data-dir-toggle aria-expanded="false" aria-controls={`${d.id}-panel`}>
+              <span class="visually-hidden">Підкатегорії: {d.title}</span>
+              <Icon name="chevron" />
+            </button>
+          </div>
+          <div class="dir__panel" id={`${d.id}-panel`}>
+            <div class="dir__inner">
+              <p class="dir__lead">{d.lead}</p>
+              <ul class="dir__subs">
+                {d.subs.map((s) => <li><FutureLink note={FUTURE}>{s}</FutureLink></li>)}
+              </ul>
+            </div>
+          </div>
+          {d.num === "03"
+            ? <a class="dir__cta" href={contact.viber} data-rec="R-001"><Icon name="viber" />Запитати у Viber</a>
+            : <a class="dir__cta tel-link" href={contact.tel} data-rec="R-001"><Icon name="phone" />Подзвонити<span class="visually-hidden"> для консультації: {contact.phoneDisplay}</span></a>}
+        </article>
+      ))}
+    </div>
+  </div>
+
+  <div class="band field field--deep" data-rec="R-001">
+    <div class="container band__in">
+      <p class="band__text">Не знайшли потрібне? Надішліть перелік у Viber, менеджер підбере позиції.</p>
+      <a class="btn btn--line" href={contact.viber}><Icon name="viber" />Надіслати перелік у Viber</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .dirs { padding-bottom: 0; }
+  .dirs__lead { display: grid; gap: var(--s-5); }
+  .dir__photo { background: var(--color-cell); aspect-ratio: 4 / 3; padding: var(--s-3); border-radius: var(--radius); }
+  .dir__photo :global(picture), .dir__photo :global(img) { display: block; width: 100%; height: 100%; object-fit: contain; }
+  .dir__photo--fill { padding: 0; overflow: hidden; }
+  .dir__photo--fill :global(img) { object-fit: cover; }
+  .dir__cta { display: inline-flex; align-items: center; white-space: nowrap; gap: var(--s-1); justify-self: start; min-height: var(--btn-h-sm); font-weight: 700; color: var(--color-primary); text-decoration: underline; text-underline-offset: 0.25em; text-decoration-thickness: 1px; }
+  .dir__cta:hover { text-decoration-thickness: 2px; }
+  .dir--compact .dir__cta { margin-bottom: var(--s-2); }
+  .dir__thumb { display: none; }
+  .dir__body { display: grid; gap: var(--s-2); padding-top: var(--s-3); }
+  .dir__title { font-family: var(--font-display); font-size: var(--fs-price); line-height: 1.15; letter-spacing: -0.01em; overflow-wrap: break-word; min-width: 0; }
+  .dir__head { display: flex; align-items: baseline; gap: 0.4em; min-width: 0; }
+  .dir__num { position: relative; flex: none; font: 700 var(--fs-price)/1.15 var(--font-display); color: var(--color-accent-ink); }
+  .dir--compact .dir__num { font-size: var(--fs-h3); }
+  /* effect 2: after a jump from the kit, the number of the target direction is underlined */
+  .dir__num::after { content: ""; position: absolute; left: 0; right: 0; bottom: -0.1em; height: 3px; background: var(--color-accent-ink); transform: scaleX(0); transform-origin: left; transition: transform var(--dur-open) var(--ease-out); }
+  .dir:target .dir__num::after { transform: scaleX(1); }
+  .dir__lead { color: var(--color-muted); max-width: 60ch; }
+  .dir__subs { list-style: none; display: flex; flex-wrap: wrap; gap: 0 var(--s-3); }
+  .dir__subs li { display: flex; }
+  .dir__subs :global(.future-link) { font-size: var(--fs-meta); }
+
+  .dirs__compact { display: grid; margin-top: var(--s-5); border-top: 1px solid var(--color-rule); }
+  .dir--compact { border-bottom: 1px solid var(--color-rule); }
+  .dir--compact .dir__title { font-size: var(--fs-h3); }
+  .dir--compact .dir__head { padding-block: var(--s-2); }
+  .dir__row { display: flex; align-items: center; justify-content: space-between; gap: var(--s-2); }
+  .dir__toggle { display: none; }
+  .dir__panel { display: grid; grid-template-rows: 1fr; }
+  .dir__inner { min-height: 0; overflow: hidden; display: grid; gap: var(--s-2); padding-bottom: var(--s-3); }
+  .dir--compact .dir__subs { flex-direction: column; }
+
+  /* effect 3: accordion on phones (scripted only; without JS everything is open) */
+  @media (max-width: 767px) {
+    :global(.js) .dir__toggle {
+      display: inline-grid; place-items: center; flex: none; width: 44px; height: 44px; border: 0; border-radius: var(--radius);
+      background: transparent; color: var(--color-primary); cursor: pointer;
+    }
+    :global(.js) .dir__toggle :global(.icon) { transition: transform var(--dur-ui) var(--ease-out); }
+    :global(.js) .dir__toggle[aria-expanded="true"] :global(.icon) { transform: rotate(180deg); }
+    :global(.js) .dir--compact .dir__panel { transition: grid-template-rows var(--dur-close) var(--ease-in-out); }
+    :global(.js) .dir--compact .dir__inner { transition: opacity var(--dur-close) var(--ease-in-out), visibility 0s linear var(--dur-close); }
+    :global(.js) .dir--compact:not([data-open]) .dir__panel { grid-template-rows: 0fr; }
+    :global(.js) .dir--compact:not([data-open]) .dir__inner { opacity: 0; visibility: hidden; }
+    :global(.js) .dir--compact[data-open] .dir__panel { transition-duration: var(--dur-open); }
+    :global(.js) .dir--compact[data-open] .dir__inner { transition: opacity var(--dur-open) var(--ease-in-out), visibility 0s; }
+  }
+
+  @media (min-width: 768px) {
+    .dir__thumb { display: block; position: relative; aspect-ratio: 4 / 3; background: var(--color-cell); border-radius: var(--radius); padding: var(--s-3) var(--s-3) var(--s-2); margin-bottom: var(--s-2); overflow: hidden; }
+    .dir__thumb :global(picture), .dir__thumb :global(img) { display: block; width: 100%; height: 100%; object-fit: contain; }
+    .dir__thumb--fill { padding: 0; }
+    .dir__thumb--fill :global(img) { object-fit: cover; }
+    .dir__chip { position: absolute; z-index: 1; left: 0; top: 0; padding: 0.15rem 0.45rem; background: var(--color-field); color: var(--color-on-field); border-bottom-right-radius: var(--radius); font: 700 var(--fs-meta)/1.4 var(--font-display); }
+    .dirs__compact { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 var(--s-3); border-top: 0; }
+    .dir--compact { border-bottom: 0; border-top: 1px solid var(--color-rule); padding-top: var(--s-2); }
+    .dir--compact .dir__head { padding-block: 0 var(--s-2); }
+  }
+  @media (min-width: 1024px) {
+    .dirs__lead { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--s-3); align-items: start; }
+    .dir--wide .dir__photo { aspect-ratio: 15 / 8; }
+    .dir--narrow .dir__photo { aspect-ratio: 4 / 3; }
+    .dirs__compact { grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: var(--s-6); }
+  }
+
+  .band { margin-top: var(--s-5); padding-block: var(--s-4); }
+  .band__in { display: grid; gap: var(--s-3); align-items: center; }
+  .band__text { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-h3); line-height: 1.3; max-width: 34ch; text-wrap: balance; }
+  .band :global(.btn) { justify-self: start; }
+  @media (min-width: 768px) {
+    .band__in { grid-template-columns: minmax(0, 1fr) auto; }
+  }
+  @media (min-width: 1024px) {
+    .band { margin-top: var(--s-6); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .dir__num::after { transition: none; }
+    :global(.js) .dir--compact .dir__panel, :global(.js) .dir--compact .dir__inner { transition: none; }
+  }
+</style>

@@ -1,0 +1,108 @@
+---
+import { Picture } from "astro:assets";
+import Icon from "./Icon.astro";
+import { contact, directions } from "../data/site";
+---
+<section id="hero" class="hero field" data-rec="R-003,R-008,SEO-R002,SEO-R008,G-R002,G-R003,S-R006,MA-R004">
+  <div class="container hero__in">
+    <div class="hero__text">
+      <h1>Аптечки та медтехніка для підрозділів, підприємств і медзакладів</h1>
+      <p class="hero__sub">Від турнікета до лабораторного столу: тактична медицина, цивільні аптечки, інструмент, обладнання, меблі й навчальні макети.</p>
+      <div class="hero__actions" data-rec="R-001">
+        <a class="btn btn--signal" href={contact.viber}><Icon name="viber" />Написати у Viber</a>
+        <a class="btn btn--line" href="#b2b" data-rec="R-005">Замовлення для організації</a>
+      </div>
+      <ul class="hero__facts" aria-label="Умови замовлення">
+        <li>Рахунок з ПДВ і без ПДВ</li>
+        <li>Prozorro</li>
+        <li>Нова Пошта по Україні</li>
+      </ul>
+    </div>
+
+    <nav class="kit" aria-label="Напрями каталогу" data-rec="R-004">
+      <ol class="kit__grid">
+        {directions.map((d, i) => (
+          <li class="kit__item" style={`--i:${i}`}>
+            <a class="kit__cell" href={`#${d.id}`}>
+              <span class="kit__num num" aria-hidden="true">{d.num}</span>
+              <span class:list={["kit__photo", d.fill && "kit__photo--fill"]}>
+                <Picture fallbackFormat="jpg" quality={80}
+                  src={d.photo}
+                  formats={["avif", "webp"]}
+                  widths={[160, 240, 360, 480]}
+                  sizes="(min-width: 1024px) 220px, (min-width: 768px) 30vw, 33vw"
+                  alt=""
+                  loading="eager"
+                  decoding="async"
+                  class:list={["kit__img", d.fill && "kit__img--cover"]}
+                />
+              </span>
+              <span class="kit__name"><span class="visually-hidden">{d.num} </span><span class="kit__long">{d.title}</span><span class="kit__short" aria-hidden="true">{d.short}</span></span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  </div>
+</section>
+
+<style>
+  .hero { padding-top: var(--s-4); padding-bottom: var(--s-3); }
+  .hero__in { display: grid; gap: var(--s-4); }
+  .hero__text { display: grid; gap: var(--s-3); }
+  h1 { max-width: 15ch; color: var(--color-on-field); overflow-wrap: break-word; min-width: 0; text-wrap: balance; }
+  .hero__sub { font-size: var(--fs-lead); line-height: 1.5; color: var(--color-on-field-muted); max-width: 56ch; }
+  .hero__actions { display: grid; gap: var(--s-2); margin-top: var(--s-1); }
+  .hero__facts { list-style: none; display: flex; flex-wrap: wrap; gap: var(--s-1) var(--s-3); font-size: var(--fs-meta); color: var(--color-on-field); }
+  .hero__facts li { position: relative; padding-left: var(--s-2); }
+  .hero__facts li::before { content: ""; position: absolute; left: 0; top: 0.35em; bottom: 0.35em; width: 2px; background: var(--color-accent); }
+
+  /* the kit: six white cells, 2px seams of the blue field between them */
+  .kit__grid { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2px; }
+  .kit__cell { display: grid; grid-template-rows: auto auto; height: 100%; background: var(--color-cell); color: var(--color-text); text-decoration: none; border-radius: var(--radius); position: relative; overflow: hidden; --focus: var(--color-accent); }
+  .kit__num {
+    position: absolute; z-index: 1; left: 0; top: 0; padding: 0.15rem 0.45rem;
+    background: var(--color-field); color: var(--color-on-field); border-bottom-right-radius: var(--radius);
+    font: 700 var(--fs-meta)/1.4 var(--font-display);
+    transition: color var(--dur-ui) var(--ease-out);
+  }
+  .kit__photo { display: block; aspect-ratio: 1 / 1; padding: 10%; padding-top: 18%; }
+  .kit__photo :global(picture), .kit__photo :global(img) { display: block; width: 100%; height: 100%; }
+  .kit__photo :global(.kit__img) { object-fit: contain; transition: transform var(--dur-ui) var(--ease-out); }
+  .kit__photo :global(.kit__img--cover) { object-fit: cover; }
+  .kit__photo.kit__photo--fill { padding: 0; overflow: hidden; }
+  .kit__photo--fill + .kit__name { padding-top: var(--s-1); }
+  .kit__name { display: block; padding: 0 var(--s-1) var(--s-1); font-size: var(--fs-meta); font-weight: 700; line-height: 1.25; }
+  .kit__long { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .kit__cell:hover .kit__num, .kit__cell:focus-visible .kit__num, .kit__cell:active .kit__num { color: var(--color-accent); }
+  .kit__cell:focus-visible { outline-offset: 0; }
+
+  /* effect 1: the kit lays itself out once, by number */
+  @keyframes kit-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .kit__item { animation: kit-in var(--dur) var(--ease-out) both; animation-delay: calc(var(--i) * var(--kit-step)); }
+
+  @media (min-width: 768px) {
+    .hero { padding-top: var(--s-5); }
+    .hero__actions { grid-auto-flow: column; justify-content: start; }
+    .kit__grid { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    .kit__photo { aspect-ratio: 5 / 4; padding: 12%; padding-top: 16%; }
+  }
+  @media (min-width: 1024px) {
+    .hero__in { gap: var(--s-5); }
+  }
+  @media (min-width: 1280px) {
+    .kit__long { position: static; width: auto; height: auto; overflow: visible; clip: auto; white-space: normal; }
+    .kit__short { display: none; }
+    .kit__name { padding: 0 var(--s-2) var(--s-2); }
+  }
+  @media (min-width: 1024px) and (hover: hover) {
+    .kit__cell:hover :global(.kit__img), .kit__cell:focus-visible :global(.kit__img) { transform: translateY(-2px); }
+  }
+  @media (min-width: 1024px) {
+    h1 { max-width: 23ch; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .kit__item { animation: none; }
+    .kit__cell:hover :global(.kit__img), .kit__cell:focus-visible :global(.kit__img) { transform: none; }
+  }
+</style>

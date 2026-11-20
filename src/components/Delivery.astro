@@ -1,0 +1,71 @@
+---
+import FutureLink from "./FutureLink.astro";
+import { FUTURE } from "../data/site";
+
+// W-F006 (without the free-delivery threshold, I-015), W-F007, products_services[3]
+const rates = [
+  { way: "Відділення", price: "від 120 грн" },
+  { way: "Кур'єр", price: "від 150 грн" },
+  { way: "Поштомат", price: "від 80 грн" },
+];
+const pay = [
+  { title: "Онлайн", text: "Apple Pay, Mono Pay, картка" },
+  { title: "На рахунок", text: "З ПДВ або без ПДВ" },
+  { title: "Накладений платіж", text: "Оплата при отриманні" },
+];
+---
+<section id="delivery" class="dlv section">
+  <div class="container">
+    <div class="section__head">
+      <h2>Доставка Новою Поштою і оплата</h2>
+      <p class="section__lead">Кожне замовлення підтверджує менеджер, після цього відправляємо по всій Україні.</p>
+    </div>
+
+    <div class="dlv__grid">
+      <div class="dlv__col">
+        <h3>Нова Пошта</h3>
+        <table class="rates">
+          <caption class="visually-hidden">Вартість доставки Новою Поштою</caption>
+          <thead><tr><th scope="col">Спосіб</th><th scope="col">Вартість</th></tr></thead>
+          <tbody>
+            {rates.map((r) => <tr><th scope="row">{r.way}</th><td class="num">{r.price.replace(" грн", " грн").replace("від ", "від ")}</td></tr>)}
+          </tbody>
+          <tfoot><tr><th scope="row">Термін</th><td class="num">1–3&nbsp;дні</td></tr></tfoot>
+        </table>
+      </div>
+
+      <div class="dlv__col">
+        <h3>Оплата</h3>
+        <dl class="pay">
+          {pay.map((p) => <div><dt>{p.title}</dt><dd>{p.text}</dd></div>)}
+        </dl>
+        <h3 class="dlv__svc">Сервіс</h3>
+        <p>Продаж і сервіс медичного обладнання, гарантійне обслуговування.</p>
+        <p class="dlv__more"><FutureLink note={FUTURE}>Повні умови доставки й оплати</FutureLink></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .dlv__grid { display: grid; gap: var(--s-5); }
+  .dlv__col { display: grid; gap: var(--s-2); align-content: start; }
+  .rates { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+  .rates th, .rates td { text-align: left; padding: var(--s-2) 0; border-bottom: 1px solid var(--color-rule); }
+  .rates thead th { font-size: var(--fs-meta); font-weight: 400; color: var(--color-muted); padding-top: 0; }
+  .rates tbody th { font-weight: 400; }
+  .rates td { text-align: right; font-family: var(--font-display); font-weight: 700; font-size: var(--fs-h3); }
+  .rates thead th:last-child { text-align: right; }
+  .rates tfoot th { font-weight: 700; border-bottom: 0; }
+  .rates tfoot td { border-bottom: 0; color: var(--color-accent-ink); }
+  .pay { margin: 0; display: grid; }
+  .pay div { display: grid; grid-template-columns: minmax(0, 11rem) minmax(0, 1fr); gap: var(--s-2); padding-block: var(--s-2); border-bottom: 1px solid var(--color-rule); }
+  .pay div:first-child { padding-top: 0; }
+  .pay dt { font-weight: 700; }
+  .pay dd { margin: 0; color: var(--color-muted); }
+  .dlv__svc { margin-top: var(--s-3); }
+  .dlv__more { margin-top: var(--s-1); }
+  @media (min-width: 1024px) {
+    .dlv__grid { grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: var(--s-6); }
+  }
+</style>

@@ -1,0 +1,29 @@
+---
+import Icon from "./Icon.astro";
+import { contact } from "../data/site";
+---
+<div class="dock field field--deep" data-rec="R-001">
+  <a class="dock__btn" href={contact.viber}><Icon name="viber" />Viber</a>
+  <a class="dock__btn" href={contact.tel}><Icon name="phone" />Подзвонити</a>
+</div>
+
+<style>
+  .dock { display: none; }
+  @media (max-width: 767px) {
+    .dock {
+      position: fixed; z-index: 40; left: 0; right: 0; bottom: 0; display: grid; grid-template-columns: 1fr 1fr;
+      border-top: 1px solid var(--color-rule-field); padding-bottom: env(safe-area-inset-bottom);
+    }
+    .dock.is-armed { transition: transform var(--dur-ui) var(--ease-out), visibility 0s; }
+    .dock.is-tucked { transform: translateY(100%); visibility: hidden; }
+    .dock.is-armed.is-tucked { transition: transform var(--dur-ui) var(--ease-out), visibility 0s linear var(--dur-ui); }
+  }
+  .dock__btn { display: flex; align-items: center; justify-content: center; gap: var(--s-1); min-height: 56px; font-weight: 700; text-decoration: none; color: var(--color-on-field); }
+  .dock__btn + .dock__btn { border-left: 1px solid var(--color-rule-field); }
+  .dock__btn :global(.icon) { color: var(--color-accent); }
+  .dock__btn:active { background: var(--color-field); }
+  .dock__btn:focus-visible { outline-offset: -4px; }
+  @media (prefers-reduced-motion: reduce) {
+    .dock.is-armed, .dock.is-armed.is-tucked { transition: none; }
+  }
+</style>

@@ -1,0 +1,52 @@
+---
+import Icon from "./Icon.astro";
+import { contact } from "../data/site";
+---
+<section id="contacts" class="cts section" data-rec="R-001">
+  <div class="container">
+    <h2>Зв'яжіться з менеджером</h2>
+    <div class="cts__grid">
+      <div class="cts__main">
+        <a class="cts__phone tel-link num" href={contact.tel}><span class="visually-hidden">Подзвонити: +38 </span>{contact.phoneDisplay}</a>
+        <div class="cts__copy">
+          <button type="button" class="btn btn--ghost btn--sm" data-copy={contact.phoneE164} hidden><Icon name="copy" />Скопіювати номер</button>
+          <span class="cts__status" role="status" data-copy-status></span>
+        </div>
+        <ul class="cts__channels">
+          <li><a class="btn btn--primary" href={contact.viber}><Icon name="viber" />Viber</a></li>
+          <li><a class="btn btn--ghost" href={contact.telegram}><Icon name="telegram" />Telegram</a></li>
+          <li><a class="btn btn--ghost" href={`mailto:${contact.email}`}><Icon name="mail" />{contact.email}</a></li>
+        </ul>
+      </div>
+      <dl class="cts__info">
+        <div><dt>Графік</dt><dd>{contact.hours.map((h) => <span class="cts__line">{h}</span>)}</dd></div>
+        <div><dt>Місто</dt><dd><span class="cts__line">{contact.city}</span><span class="cts__line">Відправка по всій Україні Новою Поштою</span></dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cts { background: var(--color-bg); }
+  .cts__grid { display: grid; gap: var(--s-5); margin-top: var(--s-4); }
+  .cts__main { display: grid; gap: var(--s-3); justify-items: start; min-width: 0; }
+  .cts__phone { font: 700 var(--fs-phone)/1 var(--font-display); letter-spacing: -0.03em; color: var(--color-primary); white-space: nowrap; max-width: 100%; }
+  .cts__copy { display: flex; align-items: center; gap: var(--s-2); min-height: 0; }
+  .cts__status { font-size: var(--fs-meta); color: var(--color-muted); }
+  .cts__channels { list-style: none; display: flex; flex-wrap: wrap; gap: var(--s-2); }
+  .cts__channels .btn { min-height: 48px; }
+  .cts__info { margin: 0; display: grid; gap: var(--s-3); align-content: start; }
+  .cts__info div { display: grid; gap: var(--s-1); padding-top: var(--s-2); border-top: 1px solid var(--color-rule); }
+  .cts__info dt { font-size: var(--fs-meta); color: var(--color-muted); }
+  .cts__info dd { margin: 0; display: grid; gap: 0.25rem; }
+  .cts__line { display: block; }
+  /* the copy button is a desktop helper; phones dial directly */
+  @media (max-width: 1023px) { .cts__copy { display: none; } }
+  @media (min-width: 1024px) {
+    .cts__grid { grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); gap: var(--s-6); align-items: end; }
+  }
+  @media (max-width: 359px) {
+    .cts__channels li { width: 100%; }
+    .cts__channels .btn { width: 100%; }
+  }
+</style>
